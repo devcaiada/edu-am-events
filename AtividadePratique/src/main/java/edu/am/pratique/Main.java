@@ -8,7 +8,6 @@ import edu.am.pratique.objetos.Usuario;
 
 import java.io.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -24,17 +23,17 @@ public class Main {
 
         File eventsFile = new File("events.data");
         if(eventsFile.exists()) {
-            eventos.addAll(readEventsFromFile());
+            eventos.addAll(lerEventos());
         }
         File usersFile = new File("users.data");
         if(usersFile.exists()) {
-            usuarios.addAll(readUsersFromFile());
+            usuarios.addAll(lerUsuarios());
         }
 
-        selectRegistrationOpt();
+        selecionaOpcao();
     }
 
-    private static void selectRegistrationOpt() {
+    private static void selecionaOpcao() {
         Scanner scanner = new Scanner(System.in);
         int opcao;
 
@@ -46,6 +45,7 @@ public class Main {
             System.out.println("4 - Consultar eventos");
             System.out.println("5 - Adicionar participante ao evento:");
             System.out.println("6 - Remover participante do evento:");
+            System.out.println("7 - Sair");
 
             opcao = scanner.nextInt();
 
@@ -56,15 +56,15 @@ public class Main {
                     break;
                 case 2:
                     System.out.println("Registrar evento selecionado:");
-                    registerEvent();
+                    registraEvento();
                     break;
                 case 3:
                     System.out.println("Consultar usuários selecionado:");
-                    printUsers();
+                    printUsuarios();
                     break;
                 case 4:
                     System.out.println("Consultar eventos selecionado:");
-                    printEvents();
+                    printEventos();
                     break;
                 case 5:
                     System.out.println("Adicionar participante ao evento:");
@@ -74,6 +74,8 @@ public class Main {
                     System.out.println("Remover participante do evento:");
                     removeUserFromEvent();
                     break;
+                case 7:
+                    return;
                 default:
                     System.out.println("Opção inválida, tente novamente");
             }
@@ -92,7 +94,7 @@ public class Main {
         return null;
     }
 
-    private static void  printEvents() {
+    private static void printEventos() {
         eventos.sort(Comparator.comparing(Evento::getDateTime).reversed());
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
         System.out.printf("| %-30s | %-20s | %-10s | %-30s | %-15s | %-40s | %-30s |\n", "Nome", "Data", "Status", "Endereço", "Categoria", "Descrição", "Participantes");
@@ -113,7 +115,7 @@ public class Main {
         System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
 
-    private  static void printUsers() {
+    private  static void printUsuarios() {
         System.out.println("----------------------------------------------------------------------------------------------------------------------------");
         System.out.printf("| %-20s | %-40s | %-20s | %-20s |\n", "Nome", "Email", "Idade", "Localização");
         System.out.println("----------------------------------------------------------------------------------------------------------------------------");
@@ -126,7 +128,7 @@ public class Main {
         System.out.println("----------------------------------------------------------------------------------------------------------------------------");
     }
 
-    private static CategoriaEvento selectEventCategory() {
+    private static CategoriaEvento selecionaCategoria() {
         int opcao;
         Scanner scanner = new Scanner(System.in);
 
@@ -159,7 +161,7 @@ public class Main {
         }while (opcao != 0);
     }
 
-    private static void registerEvent() {
+    private static void registraEvento() {
         UUID uuid = UUID.randomUUID();
         Scanner scanner = new Scanner(System.in);
         Evento evento = new Evento();
@@ -174,19 +176,19 @@ public class Main {
         evento.setEndereco(scanner.nextLine());
 
         System.out.println("Informe a categoria do evento:");
-        evento.setCategoria(selectEventCategory());
+        evento.setCategoria(selecionaCategoria());
 
         System.out.println("Informe a data e horário do evento (YYYY-MM-DD HH:MM):");
         String dateTimeString = scanner.nextLine();
-        LocalDateTime eventDateTime = formatStringToDate(dateTimeString);
-        evento.setDataEvento(eventDateTime);
+        LocalDateTime eventoDateTime = formatStringToDate(dateTimeString);
+        evento.setDataEvento(eventoDateTime);
 
         LocalDateTime currentDateTime = LocalDateTime.now();
 
-        assert eventDateTime != null;
-        if(eventDateTime.isBefore(currentDateTime)) {
+        assert eventoDateTime != null;
+        if(eventoDateTime.isBefore(currentDateTime)) {
             evento.setStatus(Status.FINSISHED);
-        }else if(eventDateTime.isEqual(currentDateTime)) {
+        }else if(eventoDateTime.isEqual(currentDateTime)) {
             evento.setStatus(Status.ONGOING);
         }else {
             evento.setStatus(Status.SCHEDULED);
@@ -195,10 +197,10 @@ public class Main {
         System.out.println("Informe a descrição do evento:");
         evento.setDescricao(scanner.nextLine());
         eventos.add(evento);
-        saveEventsToFile(eventos);
+        salvaEventsData(eventos);
 
         evento.showEvent();
-        printEvents();
+        printEventos();
     }
 
     private static void registerUser() {
@@ -225,8 +227,8 @@ public class Main {
         usuario.setUf(scanner.nextLine());
 
         usuarios.add(usuario);
-        saveUsersToFile(usuarios);
-        printUsers();
+        salvaUsersData(usuarios);
+        printUsuarios();
     }
 
     private static Usuario findUserByEmail(String email) {
@@ -286,15 +288,15 @@ public class Main {
 
     }
 
-    public static void saveEventsToFile(List<Evento> events) {
+    public static void salvaEventsData(List<Evento> eventos) {
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("events.data"))) {
-            outputStream.writeObject(events);
+            outputStream.writeObject(eventos);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static  void saveUsersToFile(List<Usuario> usuarios) {
+    public static  void salvaUsersData(List<Usuario> usuarios) {
         try(ObjectOutputStream outputStream  = new ObjectOutputStream(new FileOutputStream("users.data"))){
             outputStream.writeObject(usuarios);
         } catch (IOException e) {
@@ -302,7 +304,7 @@ public class Main {
         }
     }
 
-    public static List<Evento> readEventsFromFile() {
+    public static List<Evento> lerEventos() {
         List<Evento> eventos = new ArrayList<>();
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("events.data"))) {
             eventos = (List<Evento>) inputStream.readObject();
@@ -312,13 +314,13 @@ public class Main {
         return eventos;
     }
 
-    public static  List<Usuario> readUsersFromFile() {
-        List<Usuario> users = new ArrayList<>();
+    public static  List<Usuario> lerUsuarios() {
+        List<Usuario> usuarios = new ArrayList<>();
         try (ObjectInputStream inputStream =  new ObjectInputStream(new FileInputStream("users.data"))) {
-            users = (List<Usuario>) inputStream.readObject();
+            usuarios = (List<Usuario>) inputStream.readObject();
         }catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return users;
+        return usuarios;
     }
 }
