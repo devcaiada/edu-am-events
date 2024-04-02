@@ -8,7 +8,7 @@ Implemente um sistema em linguagem de programação **Java** utilizando a IDE de
 
 Siga as diretrizes que seguem para o desenvolvimento da atividade:
 
-- A solução deve ser desenvolvida dentro do **paradigma orientado a objetos\***;
+- A solução deve ser desenvolvida dentro do **paradigma orientado a objetos**;
 
 - Opcionalmente o projeto pode ser organizado em um **repositório GIT**;
 
@@ -41,3 +41,18 @@ Siga as diretrizes que seguem para o desenvolvimento da atividade:
 ## Resultado
 
 O sistema deveria ser executado em console. Abaixo podemos ver alguns resultados das interações com o sistema.
+
+- menu
+
+![menu](https://github.com/devcaiada/edu-am-events/blob/main/images/menu.png?raw=true)
+
+- usuários
+
+![users](https://github.com/devcaiada/edu-am-events/blob/main/images/usuarios.png?raw=true)
+
+- eventos
+
+![event](https://github.com/devcaiada/edu-am-events/blob/main/images/eventos.png?raw=true)
+
+---
+---
