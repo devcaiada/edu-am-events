@@ -48,7 +48,7 @@ O sistema deveria ser executado em console. Abaixo podemos ver alguns resultados
 
 - usuários
 
-![users](https://github.com/devcaiada/edu-am-events/blob/main/images/usuarios.png?raw=true)
+![users](https://github.com/devcaiada/edu-am-events/blob/main/images/usuarios-1.png?raw=true)
 
 - eventos
 
